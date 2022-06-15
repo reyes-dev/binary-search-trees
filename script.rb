@@ -49,6 +49,8 @@ class Tree
     node = @root
 
     loop do
+      return nil if value == node.data
+
       if value < node.data
         if node.left_child.nil?
           node.left_child = Node.new(value)
@@ -123,8 +125,5 @@ end
 array = [1, 2, 3].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
-
-tree.insert(5)
-tree.insert(4)
-
+tree.insert(1)
 p tree
