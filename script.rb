@@ -5,6 +5,8 @@ class Node
 
   def initialize(data, left_child = nil, right_child = nil)
     @data = data
+    @left_child = nil
+    @right_child = nil
   end
 end
 # accepts an array when initialized, has a root attribute
@@ -44,6 +46,25 @@ class Tree
   end
   # accepts a value to insert into the tree
   def insert(value)
+    node = @root
+
+    loop do
+      if value < node.data
+        if node.left_child.nil?
+          node.left_child = Node.new(value)
+          break
+        else
+          node = node.left_child
+        end
+      elsif value > node.data
+        if node.right_child.nil?
+          node.right_child = Node.new(value)
+          break
+        else
+          node = node.right_child
+        end
+      end
+    end
   end
   # accepts a value to delete from the tree
   # will have to deal with several cases such as when a node has children or not
@@ -99,7 +120,11 @@ class Tree
   end
 end
 
-array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
+array = [1, 2, 3].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
-tree.pretty_print
+
+tree.insert(5)
+tree.insert(4)
+
+p tree
