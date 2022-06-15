@@ -70,10 +70,23 @@ class Tree
   end
   # accepts a value to delete from the tree
   # will have to deal with several cases such as when a node has children or not
+  # if a node is a leaf (no children), just set the parent node pointer to nil
+  # if a node has one-child, change the parent nodes pointer to its one-child
   def delete(value)
   end
   # accepts a value and returns the node with it
   def find(value)
+    node = @root
+
+    begin
+    loop do
+      break node if node.data == value
+      value < node.data ? node = node.left_child : node = node.right_child
+    end
+    rescue
+      puts "That value is not present in the tree"
+    end
+
   end
   # accepts a block
   # traverses tree in breadth-first level order
@@ -122,8 +135,7 @@ class Tree
   end
 end
 
-array = [1, 2, 3].sort.uniq
+array = [1, 2, 3, 4, 5].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
-tree.insert(1)
-p tree
+p tree.find(3)
