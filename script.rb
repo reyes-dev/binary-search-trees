@@ -218,4 +218,4 @@ array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
 tree.pretty_print
-puts tree.depth(tree.root.right_child.right_child.right_child)
+puts tree.depth(tree.find(23))
