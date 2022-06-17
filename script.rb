@@ -182,14 +182,27 @@ class Tree
   # accepts a node and returns its depth
   # depth is defined as the number of edges in path from a given node to the tree's root node
   def depth(node)
+    current = @root
+    depth = 0
 
+    until current.data == node.data
+      if node.data < current.data 
+        current = current.left_child
+      elsif node.data > current.data
+        current = current.right_child
+      end
+
+      depth = depth + 1
+    end
+
+    depth
   end
   # checks if the tree is balanced
   # a balanced tree is one where the difference between heights of
   # left subtree and right subtree of every node is not more than 1
   def balanced?
   end
-  # rebalances and unbalanced tree
+  # rebalances an unbalanced tree
   # use a traversal method to provide a new array to the build_tree method
   def rebalance
   end
@@ -205,4 +218,4 @@ array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
 tree.pretty_print
-puts tree.height(tree.root)
+puts tree.depth(tree.root.right_child.right_child.right_child)
