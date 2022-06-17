@@ -1,5 +1,3 @@
-require 'pry-byebug'
-
 class Node
   include Comparable
 
