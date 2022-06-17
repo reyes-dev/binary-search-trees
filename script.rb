@@ -197,14 +197,29 @@ class Tree
 
     depth
   end
-  # checks if the tree is balanced
-  # a balanced tree is one where the difference between heights of
-  # left subtree and right subtree of every node is not more than 1
-  def balanced?
+  # checks if the tree is balanced by checking if each subtree is balanced
+  def balance_check(node, container = [])
+    return nil if node.nil?
+
+    left_height = height(node.left_child)
+    right_height = height(node.right_child)
+
+    container << (left_height - right_height <= 1)
+
+    balance_check(node.left_child, container)
+    balance_check(node.right_child, container)
+
+    container
+  end
+  # returns true if balanced, false if imbalanced
+  # or, if any falses appear during the balance_check method run
+  def balanced?(node)
+    !balance_check(node).any?(false)
   end
   # rebalances an unbalanced tree
   # use a traversal method to provide a new array to the build_tree method
   def rebalance
+    
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -214,8 +229,10 @@ class Tree
   end
 end
 
-array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
+array = [1, 2, 3].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
 tree.pretty_print
-puts tree.depth(tree.find(23))
+# proc = Proc.new { |node| puts "Node value: #{node.data}" }
+# p tree.inorder(tree.root, &proc)
+p tree.balanced?(tree.root)
