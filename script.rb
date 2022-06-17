@@ -13,10 +13,10 @@ class Node
 end
 # accepts an array when initialized, has a root attribute
 class Tree
-  attr_accessor :root
+  attr_accessor :root, :arr
 
   def initialize(arr)
-    @arr = arr
+    @arr = arr.sort.uniq
   end
   # build_tree takes an array of data and turns it into a balanced binary tree full of
   # Node objects appropriately placed, sorted, with duplicates removed
@@ -201,11 +201,9 @@ class Tree
   def balance_check(node, container = [])
     return nil if node.nil?
 
-    left_height = height(node.left_child)
-    right_height = height(node.right_child)
-
-    container << (left_height - right_height <= 1)
-
+    container << (height(node.left_child) - height(node.right_child) > 1)
+    container << (height(node.right_child) - height(node.left_child) > 1)
+    
     balance_check(node.left_child, container)
     balance_check(node.right_child, container)
 
@@ -214,7 +212,7 @@ class Tree
   # returns true if balanced, false if imbalanced
   # or, if any falses appear during the balance_check method run
   def balanced?(node)
-    !balance_check(node).any?(false)
+   !balance_check(node).any?(true)
   end
   # rebalances an unbalanced tree
   # use a traversal method to provide a new array to the build_tree method
@@ -234,11 +232,37 @@ class Tree
   end
 end
 
-array = [1, 2, 3].sort.uniq
-tree = Tree.new(array)
-tree.build_tree(array, 0, (array.length - 1))
-tree.root.right_child.right_child = Node.new(4)
-tree.root.right_child.right_child.right_child = Node.new(5)
+# array = [1, 2, 3].sort.uniq
+# tree = Tree.new(array)
+# tree.build_tree(array, 0, (array.length - 1))
+# tree.root.right_child.right_child = Node.new(4)
+# tree.root.right_child.right_child.right_child = Node.new(5)
+# tree.pretty_print
+# tree = tree.rebalance
+# tree.pretty_print
+proc = Proc.new { |node| print node }
+
+tree = Tree.new(Array.new(15) { rand(1..100) })
+tree.build_tree(tree.arr, 0, (tree.arr.length - 1))
 tree.pretty_print
+
+tree.level_order(tree.root, &proc)
+tree.preorder(tree.root, &proc)
+tree.postorder(tree.root, &proc)
+tree.inorder(tree.root, &proc)
+
+tree.insert(101)
+tree.insert(102)
+tree.insert(103)
+tree.insert(104)
+tree.pretty_print
+
+p tree.balanced?(tree.root)
 tree = tree.rebalance
+p tree.balanced?(tree.root)
 tree.pretty_print
+
+tree.level_order(tree.root, &proc)
+tree.preorder(tree.root, &proc)
+tree.postorder(tree.root, &proc)
+tree.inorder(tree.root, &proc)
