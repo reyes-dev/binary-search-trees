@@ -1,3 +1,5 @@
+require 'pry-byebug'
+
 class Node
   include Comparable
 
@@ -69,11 +71,35 @@ class Tree
     end
   end
   # accepts a value to delete from the tree
-  # will have to deal with several cases such as when a node has children or not
-  # if a node is a leaf (no children), just set the parent node pointer to nil
-  # if a node has one-child, change the parent nodes pointer to its one-child
-  def delete(value)
+  def min_val_node(node)
+    current = node
+
+    until current.left_child.nil?
+      current = current.left_child
+    end
+
+    current
   end
+
+  def delete(value, node = root)
+    return node if node.nil?
+
+    if value < node.data
+      node.left_child = delete(value, node.left_child)
+    elsif value > node.data
+      node.right_child = delete(value, node.right_child)
+    else
+      # if node has one child or zero children
+      return node.right_child if node.left_child.nil?
+      return node.left_child if node.right_child.nil?
+      # if node has two children
+      leftmost_node = min_val_node(node.right_child)
+      node.data = leftmost_node.data
+      node.right_child = delete(leftmost_node.data, node.right_child)
+    end
+    node
+  end
+
   # accepts a value and returns the node with it
   def find(value)
     node = @root
@@ -84,9 +110,8 @@ class Tree
       value < node.data ? node = node.left_child : node = node.right_child
     end
     rescue
-      puts "That value is not present in the tree"
+      false
     end
-
   end
   # accepts a block
   # traverses tree in breadth-first level order
@@ -135,7 +160,12 @@ class Tree
   end
 end
 
-array = [1, 2, 3, 4, 5].sort.uniq
+array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
-p tree.find(3)
+
+tree.pretty_print
+
+tree.delete(67)
+
+tree.pretty_print
