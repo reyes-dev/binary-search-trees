@@ -219,7 +219,12 @@ class Tree
   # rebalances an unbalanced tree
   # use a traversal method to provide a new array to the build_tree method
   def rebalance
-    
+    arr = []
+    inorder_nodes = Proc.new { |node| arr << node.data }
+    self.inorder(self.root, &inorder_nodes)
+    new_tree = Tree.new(arr)
+    new_tree.build_tree(arr, 0, (arr.length - 1))
+    new_tree
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -232,7 +237,8 @@ end
 array = [1, 2, 3].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
+tree.root.right_child.right_child = Node.new(4)
+tree.root.right_child.right_child.right_child = Node.new(5)
 tree.pretty_print
-# proc = Proc.new { |node| puts "Node value: #{node.data}" }
-# p tree.inorder(tree.root, &proc)
-p tree.balanced?(tree.root)
+tree = tree.rebalance
+tree.pretty_print
