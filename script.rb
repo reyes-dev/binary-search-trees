@@ -142,12 +142,11 @@ class Tree
   # they all traverse the tree in their respective depth-first order
   # yielding each node to the provided block
   # the methods all return an array of values if no block is given
+  # IN ORDER
   def inorder(node, &block)
     return @arr unless block_given?
-  
-    
   end
-
+  # PRE ORDER
   def preorder(node, &block)
     return @arr unless block_given?
     return if node.nil?
@@ -156,10 +155,14 @@ class Tree
     preorder(node.left_child, &block)
     preorder(node.right_child, &block)
   end
-
-  def postorder(block)
+  # POST ORDER
+  def postorder(node, &block)
     return @arr unless block_given?
+    return if node.nil?
 
+    block.call(node)
+    postorder(node.right_child, &block)
+    postorder(node.left_child, &block)
   end
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node
@@ -191,4 +194,4 @@ tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
 proc = Proc.new { |n| puts "Here's your node: #{n.data}" }
 tree.pretty_print
-tree.preorder(tree.root, &proc)
+tree.postorder(tree.root, &proc)
