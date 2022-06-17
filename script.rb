@@ -121,7 +121,20 @@ class Tree
   # use an array, acting as a queue, to keep track of all the child nodes
   # that you have yet to traverse
   # and to add new ones to the list
-  def level_order
+  def level_order(node, &block)
+    return @arr unless block_given?
+    return if node.nil?
+
+    queue = []
+    queue.push(node)
+
+    until queue.empty?
+      current = queue[0]
+      block.call(current)
+      queue.push(current.left_child) unless current.left_child.nil?
+      queue.push(current.right_child) unless current.right_child.nil?
+      queue.shift
+    end
   end
   # inorder, preorder, and postorder all accept a block
   # they all traverse the tree in their respective depth-first order
@@ -163,9 +176,6 @@ end
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
 tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
-
+proc = Proc.new { |n| puts "Here's your node: #{n.data}" }
 tree.pretty_print
-
-tree.delete(67)
-
-tree.pretty_print
+tree.level_order(tree.root, &proc)
