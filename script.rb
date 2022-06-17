@@ -232,14 +232,6 @@ class Tree
   end
 end
 
-# array = [1, 2, 3].sort.uniq
-# tree = Tree.new(array)
-# tree.build_tree(array, 0, (array.length - 1))
-# tree.root.right_child.right_child = Node.new(4)
-# tree.root.right_child.right_child.right_child = Node.new(5)
-# tree.pretty_print
-# tree = tree.rebalance
-# tree.pretty_print
 proc = Proc.new { |node| print node }
 
 tree = Tree.new(Array.new(15) { rand(1..100) })
