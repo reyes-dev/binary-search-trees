@@ -145,6 +145,11 @@ class Tree
   # IN ORDER
   def inorder(node, &block)
     return @arr unless block_given?
+    return if node.nil?
+
+    inorder(node.left_child, &block)
+    block.call(node)
+    inorder(node.right_child, &block)
   end
   # PRE ORDER
   def preorder(node, &block)
@@ -160,9 +165,9 @@ class Tree
     return @arr unless block_given?
     return if node.nil?
 
-    block.call(node)
-    postorder(node.right_child, &block)
     postorder(node.left_child, &block)
+    postorder(node.right_child, &block)
+    block.call(node)
   end
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node
@@ -189,9 +194,23 @@ class Tree
   end
 end
 
-array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
+array = [1, 2, 3].sort.uniq
 tree = Tree.new(array)
-tree.build_tree(array, 0, (array.length - 1))
+#tree.build_tree(array, 0, (array.length - 1))
 proc = Proc.new { |n| puts "Here's your node: #{n.data}" }
+
+tree.root = Node.new(1)
+tree.root.left_child = Node.new(2)
+tree.root.right_child = Node.new(3)
+tree.root.left_child.left_child = Node.new(4)
+tree.root.left_child.right_child = Node.new(5)
+
+puts "Pre-order Traversal"
+tree.preorder(tree.root, &proc)
 tree.pretty_print
+puts "In-order Traversal"
+tree.inorder(tree.root, &proc)
+tree.pretty_print
+puts "Post-order Traversal"
 tree.postorder(tree.root, &proc)
+tree.pretty_print
