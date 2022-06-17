@@ -135,18 +135,31 @@ class Tree
       queue.push(current.right_child) unless current.right_child.nil?
       queue.shift
     end
+    # level_order(node.left_child, &block)
+    # level_order(node.right_child, &block)
   end
   # inorder, preorder, and postorder all accept a block
   # they all traverse the tree in their respective depth-first order
   # yielding each node to the provided block
   # the methods all return an array of values if no block is given
-  def inorder(block)
+  def inorder(node, &block)
+    return @arr unless block_given?
+  
+    
   end
 
-  def preorder(block)
+  def preorder(node, &block)
+    return @arr unless block_given?
+    return if node.nil?
+
+    block.call(node)
+    preorder(node.left_child, &block)
+    preorder(node.right_child, &block)
   end
 
   def postorder(block)
+    return @arr unless block_given?
+
   end
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node
@@ -178,4 +191,4 @@ tree = Tree.new(array)
 tree.build_tree(array, 0, (array.length - 1))
 proc = Proc.new { |n| puts "Here's your node: #{n.data}" }
 tree.pretty_print
-tree.level_order(tree.root, &proc)
+tree.preorder(tree.root, &proc)
