@@ -172,10 +172,17 @@ class Tree
   # accepts a node and returns its height
   # height is defined as the number of edges in longest path from a given node to a leaf node
   def height(node)
+    return -1 if node.nil?
+
+    left_height = height(node.left_child)
+    right_height = height(node.right_child)
+
+    [left_height, right_height].max + 1
   end
   # accepts a node and returns its depth
   # depth is defined as the number of edges in path from a given node to the tree's root node
   def depth(node)
+
   end
   # checks if the tree is balanced
   # a balanced tree is one where the difference between heights of
@@ -194,23 +201,8 @@ class Tree
   end
 end
 
-array = [1, 2, 3].sort.uniq
+array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324].sort.uniq
 tree = Tree.new(array)
-#tree.build_tree(array, 0, (array.length - 1))
-proc = Proc.new { |n| puts "Here's your node: #{n.data}" }
-
-tree.root = Node.new(1)
-tree.root.left_child = Node.new(2)
-tree.root.right_child = Node.new(3)
-tree.root.left_child.left_child = Node.new(4)
-tree.root.left_child.right_child = Node.new(5)
-
-puts "Pre-order Traversal"
-tree.preorder(tree.root, &proc)
+tree.build_tree(array, 0, (array.length - 1))
 tree.pretty_print
-puts "In-order Traversal"
-tree.inorder(tree.root, &proc)
-tree.pretty_print
-puts "Post-order Traversal"
-tree.postorder(tree.root, &proc)
-tree.pretty_print
+puts tree.height(tree.root)
